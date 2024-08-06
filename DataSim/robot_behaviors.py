@@ -86,7 +86,7 @@ class Repeater(pt.composites.Sequence):
                  children: typing.List[pt.behaviour.Behaviour] = None,
                  ):
 
-        super().__init__(name=name, children=children)
+        super().__init__(name=name, children=children,memory=memory)
         self.memory = memory
         self.num_repeats = num_repeats
         self.at_iter = 0

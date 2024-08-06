@@ -160,7 +160,7 @@ def make_condition_node(sym_lookup_dict, every_operand):
     node = py_trees.behaviours.Success(name=condition)
     if need_inverter:
         node = py_trees.decorators.Inverter(
-            node, name="Inverter" + get_node_name_counter())
+            child=node, name="Inverter" + get_node_name_counter())
 
     return node
 
