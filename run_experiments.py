@@ -96,6 +96,7 @@ def run_all_experiments(run_multiprocess):
 def run_experiment(experiment_file):
     global base_pipeline_config, should_recolor, run_original_bt_espresso
     sim_data_output_path, sim_tree_name = bt_sim.run_sim(experiment_file)
+    print(sim_tree_name)
     pipeline_config_path = write_pipeline_config(
         base_pipeline_config, sim_data_output_path, sim_data_output_path + "output")
     bt_tree_filepath_list = run_pipeline.run_pipeline(

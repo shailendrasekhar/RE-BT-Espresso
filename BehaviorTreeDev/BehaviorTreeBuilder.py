@@ -32,7 +32,7 @@ def re_bt_espresso(dt, feature_names, label_names, _binary_features, run_orginal
         constants.ACTION_DIFF_TOLERANCE["val"] = 0
 
     if max_prune(dt):
-        return py_trees.composites.Parallel(name="Decision Tree is Only 1 Level, no behavior tree to be made as the most likley action would always be chosen.")
+        return py_trees.composites.Parallel(name="Decision Tree is Only 1 Level, no behavior tree to be made as the most likley action would always be chosen.",policy=py_trees.common.ParallelPolicy.SuccessOnAll())
 
     sym_lookup, action_to_pstring = dt_to_pstring(
         dt,
@@ -68,7 +68,7 @@ def dt_to_pstring(dt, feature_names, label_names):
 
 
 def pstring_to_btree(action_dict, sym_lookup_dict):
-    root = py_trees.composites.Parallel(name="|| Root")
+    root = py_trees.composites.Parallel(name="|| Root",policy=py_trees.common.ParallelPolicy.SuccessOnAll())
 
     for action in action_dict:
         root.add_child(create_action_seq_node(
@@ -257,11 +257,11 @@ def recursive_build(pstring_expr, sym_lookup_dict):
     if operator == constants.AND:
         recursive = True
         new_branch = py_trees.composites.Sequence(
-            name="Sequence" + get_node_name_counter())
+            name="Sequence" + get_node_name_counter(),memory=False)
     elif operator == constants.OR:
         recursive = True
         new_branch = py_trees.composites.Selector(
-            name="Selector" + get_node_name_counter())
+            name="Selector" + get_node_name_counter(),memory=False)
     # check for One
     elif type(pstring_expr) == pyeda.boolalg.expr._One:
         return None
@@ -328,7 +328,7 @@ def add_last_action_taken_seq_chains(root, action_minimized, action_minimized_wo
 
 def generate_non_cycle_seq_node(action_minimized, action_minimized_wo_lat, sym_lookup_dict, cyclenode_to_path_dict, path):
     top_seq = py_trees.composites.Sequence(
-        name=constants.LAT_SEQ_NAME + get_node_name_counter())
+        name=constants.LAT_SEQ_NAME + get_node_name_counter(),memory=False)
     lat_action = ""
     for action in path:
         process_action(action_minimized, action_minimized_wo_lat,
@@ -350,7 +350,7 @@ def create_action_seq_node(action, action_dict, sym_lookup_dict):
 
     if not isinstance(top_conditional_seq_node, py_trees.composites.Sequence):
         top_seq_node_addition = py_trees.composites.Sequence(
-            name="Sequence")
+            name="Sequence",memory=False)
         if top_conditional_seq_node != None:
             top_seq_node_addition.add_child(top_conditional_seq_node)
         final_behavior_node = top_seq_node_addition
@@ -367,7 +367,7 @@ def create_action_seq_node(action, action_dict, sym_lookup_dict):
 
 def generate_cycle_seq_node(action_minimized, action_minimized_wo_lat, sym_lookup_dict, path):
     top_seq = py_trees.composites.Sequence(
-        name=constants.REPEAT_SEQ_NAME + get_node_name_counter())
+        name=constants.REPEAT_SEQ_NAME + get_node_name_counter(),memory=False)
     lat_action = ""
     for action in path:
         if len(path) == 1:  # self cycle

@@ -201,7 +201,7 @@ def generate_action_nodes(action):
     seq_for_mult_action_node = None
     if len(action_list) > 1:
         seq_for_mult_action_node = py_trees.composites.Selector(
-            name=constants.SEL_PAR_REPLACEABLE_NAME + get_node_name_counter())
+            name=constants.SEL_PAR_REPLACEABLE_NAME + get_node_name_counter(),memory=False)
         for a in action_list:
             seq_for_mult_action_node.add_child(cleaned_action_behavior(a))
     else:
@@ -210,7 +210,7 @@ def generate_action_nodes(action):
     final_node = seq_for_mult_action_node
     if last_action_taken_node != None:
         seq = py_trees.composites.Sequence(
-            name=constants.LAT_SEQ_NAME + get_node_name_counter())
+            name=constants.LAT_SEQ_NAME + get_node_name_counter(),memory=False)
         seq.add_child(last_action_taken_node)
         seq.add_child(seq_for_mult_action_node)
         final_node = seq

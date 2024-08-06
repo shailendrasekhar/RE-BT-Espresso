@@ -1,7 +1,6 @@
 import py_trees as pt
 import random
 import sys
-
 from py_trees import composites
 from globals import robot_vars, env_vars, student_vars
 from robot_behaviors import*
@@ -38,6 +37,7 @@ class Tree():
         pass
 
     def render_tree(self, output_path, n_in):
+        # print("Say Hi")
         pt.display.render_dot_tree(
             self.root, target_directory=output_path, name=n_in)
 
@@ -56,11 +56,13 @@ class Tree_Basic(Tree):
             "repeater",
             "parsel"
         }
+        # print(self.name)
         super().__init__()
 
     def define_tree(self):
         self.build_tree(self.root, self.type_, self.name, self.child_list)
         self.b_tree = pt.trees.BehaviourTree(self.root)
+
 
     def build_tree(self, root, type_, name_, c_list):
         composite_node = self.create_composite(type_, name_)
@@ -117,7 +119,7 @@ class Tree_Basic(Tree):
             else:
                 name = "Selector_" + name
             name = "Selector"  # hardcoded for analysis
-        return pt.composites.Selector(name=name)
+        return pt.composites.Selector(name=name,memory=False)
 
     def create_sequence_node(self, name):
         if "Sequence" not in name:
@@ -126,16 +128,16 @@ class Tree_Basic(Tree):
             else:
                 name = "Sequence_" + name
             name = "Sequence"  # hardcoded for analysis
-        return pt.composites.Sequence(name=name)
+        return pt.composites.Sequence(name=name,memory=False)
 
     def create_parallel_node(self, name):
         if "||" not in name:
             name = "||_" + name
         name = "||"  # hardcoded for analysis
-        return pt.composites.Parallel(name=name)
+        return pt.composites.Parallel(name=name,policy=pt.common.ParallelPolicy.SuccessOnAll())
 
     def create_repeater_node(self, name):
         return Repeater(num_repeats=3, name="Repeat<>")  # configurable
 
     def create_par_sel_node(self, name):
-        return pt.composites.Parallel(name="|| / Selector")
+        return pt.composites.Parallel(name="|| / Selector",policy=pt.common.ParallelPolicy.SuccessOnOne())
