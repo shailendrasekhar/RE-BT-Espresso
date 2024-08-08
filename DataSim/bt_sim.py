@@ -23,15 +23,11 @@ def run_sim(json_file_path_and_name):
     with open(json_file_path_and_name) as rc:
      
         r = Tree_Basic(**json.loads(rc.read()))
-        # print("Tree is set in Basic")
         r.render_tree(output_path, json_filename_wo_extension)
-        # print("Rendered")
-    # print("I'm here")
     s = Student()
     w = World()
 
     with open(output_path + g.output_filename, mode='w') as csv_file:
-        # print("Writing")
         g.csv_writer = csv.DictWriter(csv_file,
                                       fieldnames=pt.blackboard.Blackboard.keys())
         g.csv_writer.writeheader()
